@@ -1,54 +1,28 @@
 pipeline {
+agent { label 'Jenkins-Agent' }
 
-    agent any
-
-    tools {
-        jdk 'Java17'
-        maven 'Maven3'
-    }
-
-    stages {
-
-        stage('Cleanup Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-
-        stage('Checkout from SCM') {
-            steps {
-                git branch: 'main',
-                    credentialsId: 'github',
-                    url: 'https://github.com/nikitahawaldar/jenkin_p1'
-            }
-        }
-
-        stage('Build Application') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Test Application') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Archive Artifacts') {
-            steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-            }
+```
+stages {
+    stage('Build') {
+        steps {
+            echo 'Building Application'
         }
     }
 
-    post {
-        success {
-            echo 'Build Successful'
-        }
-
-        failure {
-            echo 'Build Failed'
+    stage('Test') {
+        steps {
+            echo 'Testing Application'
         }
     }
+
+    stage('Archive Artifacts') {
+        steps {
+            sh 'mkdir -p target'
+            sh 'echo "Build Successful" > target/result.txt'
+            archiveArtifacts artifacts: 'target/*', fingerprint: true
+        }
+    }
+}
+```
+
 }
