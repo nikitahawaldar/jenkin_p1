@@ -1,7 +1,6 @@
 pipeline {
 agent { label 'Jenkins-Agent' }
 
-```
 stages {
     stage('Build') {
         steps {
@@ -23,6 +22,5 @@ stages {
         }
     }
 }
-```
 
 }
