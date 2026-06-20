@@ -38,11 +38,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh 
-                    mvn sonar:sonar \
-                    -Dsonar.projectKey=jenkin_p1 \
-                    -Dsonar.projectName=jenkin_p1
-                    
+                    sh mvn sonar:sonar -Dsonar.projectKey=jenkin_p1-Dsonar.projectName=jenkin_p1
                 }
             }
         }
