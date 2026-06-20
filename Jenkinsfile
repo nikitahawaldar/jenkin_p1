@@ -1,35 +1,60 @@
 pipeline {
-agent { label 'Jenkins-Agent' }
+    agent { label 'Jenkins-Agent' }
 
-stages {
-    stage('Build') {
-        steps {
-            echo 'Building Application'
+    tools {
+        maven 'Maven3'
+        jdk 'Java17'
+    }
+
+    stages {
+
+        stage('Build') {
+            steps {
+                echo 'Building Application'
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running Tests'
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo 'Packaging Application'
+                sh 'mvn package'
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=jenkin_p1 \
+                    -Dsonar.projectName=jenkin_p1
+                    
+                }
+            }
         }
     }
 
-    stage('Test') {
-        steps {
-            echo 'Testing Application'
+    post {
+        success {
+            echo 'Pipeline Executed Successfully'
+        }
+
+        failure {
+            echo 'Pipeline Failed'
         }
     }
-
-    stage('Archive Artifacts') {
-        steps {
-            sh 'mkdir -p target'
-            sh 'echo "Build Successful" > target/result.txt'
-            archiveArtifacts artifacts: 'target/*', fingerprint: true
-        }
-    }
-     stage("SonarQube Analysis"){
-           steps {
-	           script {
-		        withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') { 
-                        sh "mvn sonar:sonar"
-		        }
-	           }	
-           }
-       }
-}
-
 }
