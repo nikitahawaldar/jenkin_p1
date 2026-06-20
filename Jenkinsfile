@@ -8,9 +8,9 @@ pipeline {
  environment {
 	    APP_NAME = "register-app-pipeline"
             RELEASE = "1.0.0"
-            DOCKER_USER = "nikita5x"
+            DOCKER_USER = 'nikitahawaldar'
             DOCKER_PASS = 'dockerhub'
-            IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+            nikitahawaldar/register-app-pipeline
             IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
     stages {
