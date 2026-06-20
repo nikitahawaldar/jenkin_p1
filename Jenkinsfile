@@ -37,7 +37,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('SonarQube-service') {
                     sh 'mvn sonar:sonar -Dsonar.projectKey=jenkin_p1 -Dsonar.projectName=jenkin_p1'
                 }
             }
