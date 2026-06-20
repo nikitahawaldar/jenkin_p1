@@ -38,7 +38,19 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube-service') {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=jenkin_p1 -Dsonar.projectName=jenkin_p1'
+                    sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=jenkin_p1 \
+                        -Dsonar.projectName=jenkin_p1
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
